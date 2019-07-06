@@ -1,0 +1,15 @@
+{
+  "name": "sonos-state",
+  "version": "1.0.0",
+  "description": "Monitors sonos state for play/stop events, and makes REST call to turn on/off McIntosh Mac6700 Receiver.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "geekbleek",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.0",
+    "sonos": "^1.12.0"
+  }
+}
