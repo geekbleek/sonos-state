@@ -1,4 +1,6 @@
 const { DeviceDiscovery } = require('sonos')
+const listener = require('sonos').Listener
+
 const request = require('request');
 
 var isPlaying
@@ -9,15 +11,28 @@ var changingPowerState = null
 DeviceDiscovery((device) => {
   console.log('found device at ' + device.host)
     
-  if (device.host === '192.168.102.56') {
-    
-    // set listener on main device...
+
     device.on('PlayState', state => {
-        handleState(device, state)
+        displayState(device, state)
     })
-  }
-  
+
+    device.on('CurrentTrack', track => {
+        console.log('Track changed to %s by %s', track.title, track.artist)
+        console.log(`Image at ${JSON.stringify(track)}`)
+    })
+
+//   if (device.host === '192.168.102.56') {
+    
+//     // set listener on main device...
+//     device.on('PlayState', state => {
+//         handleState(device, state)
+//     })
+//   }
 })
+
+function displayState(device,state) {
+    console.log(`Device ${device.host} has following state: ${state}`)
+}
 
 function handleState(device,state) {
     if (state === 'transitioning' || state === 'playing') {
@@ -71,3 +86,16 @@ function controlPower(state,callback) {
         changingPowerState = false
     }
 }
+
+process.on('SIGINT', () => {
+    console.log('Hold-on cancelling all subscriptions')
+    listener.stopListener().then(result => {
+      console.log('Cancelled all subscriptions')
+      process.exit()
+    }).catch(err => {
+      console.log('Error cancelling subscriptions, exit in 3 seconds  %s', err)
+      setTimeout(() => {
+        process.exit(1)
+      }, 2500)
+    })
+  })
