@@ -5,11 +5,11 @@ npm install
 node app.js
 ```
 
-Use PM2 to manage:
+Use PM2 to manage (as root for sonos bridge):
 
 ```
 npm install pm2@latest -g
-pm2 start --time app.js
+pm2 start app.js --name sonos-state --time
 ```
 
 Config PM2 to startup
